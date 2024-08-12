@@ -1,0 +1,35 @@
+---
+title: 'Set Up GTM Tag Monitoring'
+description: 'Use this article if you have added new tags in GTM and would like to monitor them'
+icon: 'tag'
+---
+
+### Instructions
+
+To monitor a new tag follow these instructions:
+
+1. Make sure you have integrated Monita with the GTM container you would like to Monitor. See this article [Integrating with GTM Container] **[TODO: ADD LINK]**
+2. Go to the [Monitoring home page](https://beta.raptor.digital/monitoring)
+3. Click 'New Container' (your integrated containers and tags will appear)
+![Click "New Container" button](/images/monitoring/gtm-monitoring-add-new-container-button.png)
+4. Select the Account and Container you would like to Monitor
+![Select Container](/images/monitoring/gtm-monitoring-select-container.png)
+5. Enter all Domains which this container is deployed to. This can be a root domain, or a subdomain. 
+6. Select the Tags you would like to monitor within your container
+![Tag selection](/images/monitoring/gtm-monitoring-tag-selection.png)
+<Warning>Before proceeding to deployment please ensure that no one is creating/editing anything in the Google Tag Manager container which you are setting up.</Warning>
+6.  Click 'Monitor Tags'
+
+This will begin deploying our Tag Template, Tag Monitoring Tag, Endpoint variable, Token Variable. The following message will appear:
+![Deployment progress message](/images/monitoring/gtm-monitoring-deployment-confirmation1.png)
+7. Upon completion a summary message will appear in the bottom left indicating the amount of tags that have either been created, updated, removed or unmodified.
+![Deployment completion message](/images/monitoring/gtm-monitoring-deployment-confirmation2.png)
+8.  Enter into the target Google Tag Manager container and verify the deployment. For net new monitoring setups  it should look like this (tags being monitored should be Modified as the bottom tag in this image):
+![Deployment review in GTM](/images/monitoring/gtm-monitoring-deployed-assets-in-gtm.png)
+9. You can either Preview or Submit your container to production.
+<Note>If previewing tags, they will fire as usual, although traffic will not be admitted to Monita so that outliers are not introduced to your production data.</Note>
+10. Your integration and GTM setup is now complete. You will now need to integrate to Google Data Studio or your Visualisation platform of choice.
+
+To setup visualisation for your Tag Monitoring in Google Data Studio seeSetup Google Data Studio visualisation **[TODO: ADD LINK]**
+
+### Related Articles

@@ -1,0 +1,94 @@
+---
+title: 'Set Up Global Monitoring'
+description: 'This is a step by step guide to setup and manage Monita Global Monitoring Setup/Manage Global Monitoring (Tealium/Adobe/GTM/JS)'
+icon: 'file-code'
+---
+
+Global Monitoring is an Enterprise feature, which enables companies to agnostically monitor any network request departing the webpage. This is especially useful if you are intending to monitor more than just  tags/pixels/events from a particular JS container, but you are looking to monitor any request no matter which JS based container it is made from whether the script was loaded on the HTML head/body, a via a tag manager or a CMS etc).
+
+This can be used to monitor:
+
+* Marketing/conversion events to platforms like google ads or facebook 
+* Data layer events
+* Analytics or CDP events to platforms like GA4, Adobe Analytics or Tealium/Segment CDP
+* Any outgoing HTTP event (so long as you know the URL header)
+
+### Instructions
+
+1. Click 'New Domain' and your domain and select the Monitoring Tab
+![](/images/monitoring/global-monitoring-add-new-domain.png)
+2. Provide the System you wish to Monitor events from.
+![](/images/monitoring/global-monitoring-select-monitoring-system.png)
+<Note>
+Note the base Javascript for all Global Monitoring is quite similar, the various tag manager flavours differ in the specific metadata they automatically pick up from the browser. 
+  <ul>
+<img src="/logo/google_tag_manager.svg" height="14" width="50"/>Google Tag Manager Global will access `google_tag_manager` and take the container name and version.
+<img src="/logo/tealium-logo.svg" height="14" width="50"/>Tealium Global will access `utag` and take the profile name and version.
+<img src="/logo/adobe.png" height="14" width="50"/>Adobe Global will access `_satellite` and access the launch property and version.
+<img src="/logo/tagcommander-logo.png" height="14" width="50"/> Tag commander will access `tC` and access account, container and environment.
+<Icon icon="code" iconType="solid" size="50" />
+Other is an Agnostic Browser JS SDK and can be run on any browser or any system not specifically mentioned (e.g Segment, Ensighten etc).
+  </ul>
+</Note>
+3. Next provide the Domain you wish to ingest events from and press enter (you can add subdomains here)
+![Add domain](/images/monitoring/global-monitoring-enter-domain.png)
+4. Start adding Vendors by Clicking new Vendor
+![Vendor List](/images/monitoring/global-monitoring-vendor-list-screen.png)
+5. Search for an existing Vendor or create a Custom Vendor
+<Frame caption="Create a custom vendor">![Add custom vendor](/images/monitoring/global-monitoring-add-custom-vendor.png)</Frame>
+<Frame caption="Search for existing providers">![Add existing vendor](/images/monitoring/global-monitoring-add-existing-vendor.png)</Frame>
+6. Fill in the Monitoring Form for the specific Vendor you have Chosen
+![Vendor configuration screen](/images/monitoring/global-monitoring-vendor-config.png)
+The form has several crucial fields to complete:
+<AccordionGroup>
+    <Accordion title="Domains">
+    This is the domain which client side pixel/tag requests are sent to.
+    Typically known as the request URL e.g. for Facebook, "facebook.com/tr".
+    </Accordion>    
+    <Accordion title="Execluded Parameters">
+    Use this field to specify which keys you would like to exclude from monitoring. e.g. Facebook sends an "sw" parameter with screen width. If you don't want/need to monitor that key, enter it here.
+    </Accordion>    
+    <Accordion title="Event Mapping Field">
+    Used to specify which key in the vendors payload corresponds to the event name. You can specify either a single field by name, or multiple fields inside curly braces e.g. "\{\{paramA\}\}-\{\{paramB\}\}". Here is an example request with the event in the "ev" parameter:
+    ![Mapped event examples](/images/monitoring/global-monitoring-custom-event-field.png)
+    You can also extract a field value via regular-expression. E.g. event="eve-\{\{regex::\\d+::myfield\}\}" tranlates to regular expression search of "\\d+" (multiple digits) on value of field "myfield". In a payload \{ myfield: "ABC123" \}, the event field will be "eve-123".
+    </Accordion>    
+    <Accordion title="Filters">
+    Use this to focus your monitoring to specific vendor requests e.g. only where "ev" = "orderSuccess". This can also help reduce API call consumption.
+    </Accordion>    
+</AccordionGroup>
+7. After completing your Vendor Form press the Apply and then the Save button. To Manage simply enter this form again, edit and you will notice the Deployment Version at the bottom increment by 1.
+![Vendor added to list](/images/monitoring/global-monitoring-added-vendor.png)
+8. Follow your installation guide which will provide you with your particular installation guide (depending on which System you selected).
+![Installing monitoring script](/images/monitoring/global-monitoring-installation-script.png)
+9. Once you have deployed your Monita Script to your Domain, test and troubleshoot to make the script is deployed, the Monita tag is firing and events are streamed to Monita.
+<AccordionGroup>
+    <Accordion title="Checking that Monita Script is being loaded on the Client side (your Domain)">
+    1. Visit the domain where you installed Monita on (make sure ad blockers are off)
+    2. Open the browser console and type `__monita_settings`
+    3. If that loads this means the Script is present on your page 
+    4. Within the Global object you will notice the script version this should align with what you see within Domain Setup in the Deployment Version (visible next to the Bin icon)
+    5. If you want to refresh the script on your page just add the following query string paramater to your url which and refresh the page. `?monitarefresh=1`
+    <Frame caption="Monita settings in your browser console">![Monita settings in dev console](/images/monitoring/global-monitoring-check-monita-settings.png)</Frame>
+    <Frame caption="Monita settings in your browser console">![Monita deployment version](/images/monitoring/global-monitoring-check-deployment-version.png)</Frame>
+    </Accordion>
+    <Accordion title="Checking Monita calls are firing on the Client side (your Domain)">
+    1. Go to the domain you are monitoring
+    2. Open the Developer Network Tab (F12)
+    3. Fire off any of the Vendors/Events you have monitored in the platform
+    4. Filter requests for v1/or raptor.digital
+    5. Confirm you can see successful 🟢 204 requests going to our endpoint
+    <Frame caption="Monita settings in your browser console">![Monita deployment version](/images/monitoring/global-monitoring-check-monita-traffic.png)</Frame>
+    </Accordion>
+    <Accordion title="Checking Monita calls are being received on the Server Side (Monita)">
+    Open the Visualisation Tab in Monita.
+
+    You should be able to see your events grouped by Vendor and Event and filter for any of the keys that have been ingested from each vendor/event by Expanding an event and filtering on the Data Tab.
+    <Warning>
+        If you have not completed your Event Mapping Field, from your Vendor Setup, events will not group by event, they will be instead only be grouped by a Vendor with the event being blank. You will know event is mapped properly if it appears on the client side in the `e` parameter shown below
+        ![Mapped event examples](/images/monitoring/global-monitoring-mapped-event.png)
+    </Warning>
+    ![Visualisation](/images/monitoring/global-monitoring-vizualization.png)
+    </Accordion> 
+</AccordionGroup>
+### Related Articles

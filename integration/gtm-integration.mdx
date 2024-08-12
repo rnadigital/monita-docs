@@ -1,0 +1,25 @@
+---
+title: 'GTM Container Integration'
+description: 'This article takes users through how to integrate with a Google Tag Manager container.'
+icon: 'google'
+---
+
+### Instructions
+1. [Login](https://app.getmonita.io) to the app
+2. Go to [Integrations](https://app.getmonita.io/integrations)
+3. Click 'New Integration'
+![](/images/integration/integration-new-integration-button.png)
+4. Select Google Tag Manager and press 'Connect with Google'
+![](/images/integration/integration-select-gtm.png)
+5. Confirm GTM permissions required by checking the boxes (view may vary from image)
+![](/images/integration/integration-monita-access-to-container.png)
+6. Select Google Account. You may see a different screen if the user is not logged into any Google account, or the target Google account is not logged in.
+<Warning>Selected account must have full-write access to the container being monitored. Failure to have adequete perrmissions will result in monitoring errors. At a minimum, the account must be able to modify containers and container versions. Currently Monita does not Publish via the integration. The user is required to published manually. This is done to ensure user had total control over release cycle of GTM.</Warning>
+![Google account selection](/images/integration/integration-google-account-selection.png)
+7. Confirm permmissions being allowed to Monita
+![Allow](/images/integration/integration-google-account-confirm-permissions.png)
+8. If integration is successful, a tile will appear with a green status light.
+![New integration tile](/images/integration/integration-gtm-integration-card.png)
+<Note>After connecting it may take up-to 5mins before your containers propagate into our system. Please allow time after before deploying tags.</Note>
+
+## Related Articles

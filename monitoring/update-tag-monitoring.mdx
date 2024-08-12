@@ -1,0 +1,44 @@
+---
+title: 'Update GTM Tag Monitoring'
+description: 'This is a step by step guide to update Monita Tag Monitoring for GTM Container Monitoring'
+icon: 'tag'
+---
+### Instructions
+1. Make sure you have integrated Monita with the GTM container you would like to Monitor. See this article Integrating with a GTM container **[TODO: ADD LINK]** 
+2. Hover over the container you would like to update tag monitoring for and press 'Manage'
+![](/images/monitoring/gtm-monitoring-card.png)
+3. Use the checkboxes to fine tune how you would like to monitor the tag
+    1. To monitor **only the volume of a tag** - select only the top level checkbox only
+    2. To monitor **a specific tag data/variable** - select the checkbox next to the specific tag variable
+<Frame  caption="Domain Setup">
+![](/images/monitoring/gtm-monnitoring-config-modal-tag-setup.png)
+</Frame>
+4. Press 'Save'
+
+This update the associated Monitoring Tag within Google Tag Manager
+![](/images/monitoring/gtm-monitoring-save-confirmation.png)
+
+<Note>By default Monita will create a workspace called "Monita Deployment Workspace" and push any required Monita template changes to that workpspace. 
+If you are using the free version GTM, make sure to have no more than 2 workspaces in use as there is a limit of 3 workspaces. In these cases Monita will push to the default workspace.</Note>
+
+5. Upon completion a Domain Setup modal will close.
+6. Enter into the target Monita Deployment Workspace and verify the changes.
+<Frame caption="Select Monita Deployment Workspace">
+![](/images/monitoring/gtm-monitoring-gtm-workspace-selection.png)
+</Frame>
+You will notice a modification to your Monita tag (your Monita tag name may be different)
+<Frame caption="Monita Deployment Workspace">
+![](/images/monitoring/gtm-monitoring-gtm-workspace-view.png)
+</Frame>
+7. You can either Preview or Submit your container to production.
+<Note>If previewing tags, they will fire as usual, although traffic will not be admitted to Monita so that outliers are not introduced to your production data.</Note>
+10. You can confirm your tag is firing by looking on the Client side and filtering network requests for raptor.digital, or by entering your by filtering your Monita Dashboard for results
+<Frame caption="Client side example - filter for raptor.digital">
+![](/images/monitoring/gtm-monitoring-traffic-inspection.png)
+</Frame>
+Checking in the platform
+<Frame caption="Checking in the platform">
+![](/images/monitoring/gtm-monitoring-vizualization.png)
+</Frame>
+
+### Related Articles

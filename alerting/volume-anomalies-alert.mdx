@@ -1,0 +1,49 @@
+---
+title: 'ML Volume Anomaly Alert'
+description: 'Checkout the instructions below for how to create an ML Volume Alert in Monita'
+icon: 'chart-mixed'
+---
+
+<Warning>ML Anomaly alerts requires a minimum of 1000 rows of data and/or 1 week of training data to begin working. If you have any questions [contact support](mailto:support@getmonita.io) or your account manager.</Warning>
+
+### Instructions
+1. Hover on your property/container and press Alerts
+![Hover over monitoring card](/images/alerting/alerting-monitoring-card.png)
+2. Click 'New Alert'
+![Hover over monitoring card](/images/alerting/alerting-alerts-list.png)
+
+#### Select your Monitoring type below to see the alert setup for each. 
+<AccordionGroup>
+    <Accordion title="For Google Tag Manager Containers">
+        3. Select ML Tag Volume Anomalies
+        ![Hover over monitoring card](/images/alerting/gtm-select-alert-type.png)
+        4. Select the Tag you would like to apply the alert to
+        ![Select tags](/images/alerting/gtm-select-tags.png)
+        5. Optionally set the Severity of this particular Alert
+        6. Enter any conditions
+        ![Set anomaly conditions](/images/alerting/gtm-set-anomalies-condition.png)
+        <Note>If you are receiving too many alerts (false positives) try reducing the sensitivity. Alternatively if you feel like it you are not alerted frequently enough try increasing the sensitivity</Note>
+        7. Finally select the channel you would like to get notified on (either Slack or Email).
+        ![Select destination](/images/alerting/gtm-set-destination.png)
+        <Note>If you have not yet added a Slack integration, your slack workspace won't appear. To add a Slack Integration go to: <br/>[Integrations](https://getmonita.io/integrations) > Click New Integration  > Select Slack<br />For detailed instructions on how to add a Slack Integration, see [this article](/integration/slack-integration).</Note>
+        8. Press Save
+        ![Click save button](/images/alerting/save-button.png)
+    </Accordion>
+    <Accordion title="For Global Monitoring Container (Tealim/Adobe Launch/GTM/Tag Commander/JS)">
+        3. Provide an alert name name, select the domain, select AI Anomaly Detection, select the Severity and select the Vendor
+        ![Set vendor](/images/alerting/global-set-vendor.png)
+        4. Enter in any conditions you would like be met to trigger the alert
+        ![Set conditions](/images/alerting/global-set-anomalies-conditions.png)
+        <Tip>If you would like to copy and paste multiple comma delimited values in the Value field you can do so and press Enter (which will split it up into multiple chips). Alternatively if you toggle the verbatim input mode on, this will process anything pasted as a single value.<img src="/images/alerting/global-set-verbatim-mode.png" /></Tip>
+        5. Provide an execution period
+        ![Set execution period](/images/alerting/global-anomalies-set-alert-period.png)
+        6. Provide the Alert destination (slack, email)
+        ![Set destination](/images/alerting/global-set-destination.png)
+        <Note>If you have not yet added a Slack integration, your slack workspace won't appear. To add a Slack Integration go to: <br/>[Integrations](https://getmonita.io/integrations) > Click New Integration  > Select Slack<br />For detailed instructions on how to add a Slack Integration, see [this article](/integration/slack-integration).</Note>
+        7. Press Save
+    </Accordion>
+    Anomaly alerts look like this in Slack
+    ![Anomalies-alert](/images/alerting/anomalies-alert-with-trend.png)
+</AccordionGroup>
+
+### Related Articles

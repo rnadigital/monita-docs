@@ -1,0 +1,50 @@
+---
+title: 'Data Validation Alerts (realtime/scheduled)'
+description: 'Checkout the instructions below for how to create a Data Validation Alert in Monita'
+icon: 'pen-field'
+---
+
+### Instructions
+1. Hover on your property/container and press Alerts
+![Hover over monitoring card](/images/alerting/alerting-monitoring-card.png)
+2. Click 'New Alert'
+![Hover over monitoring card](/images/alerting/alerting-alerts-list.png)
+
+#### Select your Monitoring type below to see the alert setup for each. 
+<AccordionGroup>
+    <Accordion title="For Google Tag Manager Containers">
+        3. Select Select Tag Data Validation
+        ![Hover over monitoring card](/images/alerting/gtm-select-alert-type.png)
+        4. Select the Tag you would like to apply the alert to
+        ![Select tags](/images/alerting/gtm-select-tags.png)
+        5. Optionally set the Severity of this particular Alert
+        6. Enter a condition which you would like your alert to trigger on
+            1. ANY will apply an OR to any rows in the field key section
+            2. ALL will apply an AND to any rows in the field/key section
+        ![Enter data conditions](/images/alerting/gtm-data-conditions.png)
+        7. Select the Comparison period, this can be evaluated on a Realtime, Hourly, Daily, 3 day or Weekly basis
+            1. If Realtime, you can provide a Stop. The example above ensures regardless of how many times it happens, you receive no more than 1 alert every hour
+            2. If daily, enter what time you would like to be notified. _Note this is also the time window of evaluation eg if daily, we will count the number of times the conditions were met from 9am - 9am_
+        8. Finally select the channel you would like to get notified on (either Slack or Email).
+        ![Select destination](/images/alerting/gtm-set-destination.png)
+        <Note>If you have not yet added a Slack integration, your slack workspace won't appear. To add a Slack Integration go to: <br/>[Integrations](https://getmonita.io/integrations) > Click New Integration  > Select Slack<br />For detailed instructions on how to add a Slack Integration, see [this article](/integration/slack-integration).</Note>
+        9. Press Save
+        ![Click save button](/images/alerting/save-button.png)
+    </Accordion>
+    <Accordion title="For Global Monitoring Container (Tealim/Adobe Launch/GTM/Tag Commander/JS)">
+        3. Enter the name, select the domain, select Data Validation, select the Severity and provide the Vendor
+        ![Set vendor](/images/alerting/global-data-select-vendor.png)
+        4. Enter in any conditions you would like be met to trigger the alert
+        ![Set conditions](/images/alerting/global-data-set-conditions.png)
+        <Tip>If you would like to copy and paste multiple comma delimited values in the Value field you can do so and press Enter (which will split it up into multiple chips). Alternatively if you toggle the verbatim input mode on, this will process anything pasted as a single value.<img src="/images/alerting/global-set-verbatim-mode.png" /></Tip>
+        5. Provide an execution period
+        ![Set execution period](/images/alerting/global-data-execution-period.png)
+        6. Provide the Alert destination (slack, email)
+        ![Set destination](/images/alerting/global-set-destination.png)
+        <Note>If you have not yet added a Slack integration, your slack workspace won't appear. To add a Slack Integration go to: <br/>[Integrations](https://getmonita.io/integrations) > Click New Integration  > Select Slack<br />For detailed instructions on how to add a Slack Integration, see [this article](/integration/slack-integration).</Note>
+        7. Press Save
+    </Accordion>
+
+</AccordionGroup>
+
+### Related Articles
