@@ -1,0 +1,21 @@
+---
+title: "Monita Collect"
+description: "Learn how to send events directly to Monita based on custom javascript execution"
+icon: 'code'
+---
+You many want to want to send a custom event to Monita based on a user action or other condition that is not associated with a server call made by the vendor.
+
+### Instructions
+1. [Configure Global Monitoring](/monitoring//setup-global-monitoring)
+2. Choose a vendor you want to send events for. You may create your own custom vendor
+3. Enable Monita collect
+![Enable Monita Collect](/images/monitoring/global-monitoring-monita-collect-switch.png)
+4. <p>Open Vendor code detail panel by clicking on code <Icon icon="code-simple" iconType="solid"/></p>
+![Open vendor code detail pane](/images/monitoring/global-monitoring-expand-code-detail-panel.png)
+5. Copy code example
+![copy code](/images/monitoring/global-monitoring-vendor-code-detail-pane.png)
+6. Paste and modify the code in your website Javascript code
+<Tip>If you want to keep track of certain variables, call monita collect `monitaSendBeacon(...)` at the same spot inthe code the variables are set before being processed.</Tip>
+![Enable Monita Collect](/images/monitoring/global-monitoring-monita-collect-code-example.png)
+7. Test execution
+![Check Monita Collect traffic](/images/monitoring/global-monitoring-monita-collect-call-check.png)

@@ -49,9 +49,23 @@ The form has several crucial fields to complete:
     Use this field to specify which keys you would like to exclude from monitoring. e.g. Facebook sends an "sw" parameter with screen width. If you don't want/need to monitor that key, enter it here.
     </Accordion>    
     <Accordion title="Event Mapping Field">
-    Used to specify which key in the vendors payload corresponds to the event name. You can specify either a single field by name, or multiple fields inside curly braces e.g. "\{\{paramA\}\}-\{\{paramB\}\}". Here is an example request with the event in the "ev" parameter:
+    Used to specify which key in the vendors payload corresponds to the event name.
+    You can specify either a single field by name, or multiple fields inside curly braces e.g. `{{fieldA}}-{{fieldB}}`. Here is an example request with the event in the "ev" parameter:
     ![Mapped event examples](/images/monitoring/global-monitoring-custom-event-field.png)
-    You can also extract a field value via regular-expression. E.g. event="eve-\{\{regex::\\d+::myfield\}\}" tranlates to regular expression search of "\\d+" (multiple digits) on value of field "myfield". In a payload \{ myfield: "ABC123" \}, the event field will be "eve-123".
+    You can also extract a field value via regular-expression.
+    
+    E.g. You may want to extract a sub-domain from a URL and add it to the event, this can be done by find inf the correct regex and applying it to the field parameter in the following format:
+    
+    `regex::(?<=https:\/\/)[\w|-]*::url`
+    
+    This format represents 3 sections, separated by double-colons (`::`). The 3 sections are:
+    * `regex` which inpforms the expression parser that the user is passing a regex expression
+    * `(?<=https:\/\/)[\w|-]*` is the regular expression  itself (javascript regex supported. Test your regex in any regex editor such are [Regexr](https://regexr.com/))
+    * `url` is the field from which the content is extracted. You may use a dot (`.`) separated field path. (`url`, `host`, `method` and `vendorName` are automatically added to the payload)
+
+    The following execnt field `eve-{{regex::(?<=https:\/\/)[\w|-]*::url}}` (multiple digits) on value of field "myfield". In a payload `{ url: "https://subdomain.myapp.com" }`, the event field will be `eve-subdomain`.
+
+    <Tip>Regular Expression allows for capturing text in relation to the existence of other text before it or after it. This is called [lookahead](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Lookahead_assertion) and [lookbehind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Lookbehind_assertion)</Tip>
     </Accordion>    
     <Accordion title="Filters">
     Use this to focus your monitoring to specific vendor requests e.g. only where "ev" = "orderSuccess". This can also help reduce API call consumption.
@@ -70,7 +84,7 @@ The form has several crucial fields to complete:
     4. Within the Global object you will notice the script version this should align with what you see within Domain Setup in the Deployment Version (visible next to the Bin icon)
     5. If you want to refresh the script on your page just add the following query string paramater to your url which and refresh the page. `?monitarefresh=1`
     <Frame caption="Monita settings in your browser console">![Monita settings in dev console](/images/monitoring/global-monitoring-check-monita-settings.png)</Frame>
-    <Frame caption="Monita settings in your browser console">![Monita deployment version](/images/monitoring/global-monitoring-check-deployment-version.png)</Frame>
+    <Frame caption="Your Deployment Version visible down below">![Monita deployment version](/images/monitoring/global-monitoring-check-deployment-version.png)</Frame>
     </Accordion>
     <Accordion title="Checking Monita calls are firing on the Client side (your Domain)">
     1. Go to the domain you are monitoring
@@ -91,4 +105,3 @@ The form has several crucial fields to complete:
     ![Visualisation](/images/monitoring/global-monitoring-vizualization.png)
     </Accordion> 
 </AccordionGroup>
-### Related Articles
