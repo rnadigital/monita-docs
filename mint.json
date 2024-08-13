@@ -3,7 +3,7 @@
     "name": "Monita Docs",
     "logo": {
         "dark": "/logo/monita_logo.png",
-        "light": "/logo/monita_logo_light.png"
+        "light": "/logo/monita_logo.png"
     },
     "favicon": "/logo/logo-monita-green-badge.png",
     "colors": {
@@ -21,7 +21,7 @@
     }],
     "topbarCtaButton": {
         "name": "APP",
-        "url": "https://getmonita.io"
+        "url": "https://app.getmonita.io"
     },
     "navigation": [{
             "group": "Setting-up Monitoring",
