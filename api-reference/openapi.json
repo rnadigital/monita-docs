@@ -2,9 +2,34 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Monita API",
+    "description": "API documentation for Monita",
     "version": "0.1.0"
   },
+  "servers": [
+    {
+      "url": "https://crawl.getmonita.io",
+      "description": "production server"
+    }
+  ],
   "paths": {
+    "/": {
+      "get": {
+        "summary": "Health Check",
+        "operationId": "health_check__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1": {
       "post": {
         "summary": "Crawl Page",
