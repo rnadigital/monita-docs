@@ -129,6 +129,17 @@
       },
       "CrawlRequest": {
         "properties": {
+          "user": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User"
+          },
           "url": {
             "type": "string",
             "title": "Url"
@@ -156,6 +167,18 @@
               }
             ],
             "title": "Validationrules"
+          },
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid4"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id"
           }
         },
         "type": "object",
