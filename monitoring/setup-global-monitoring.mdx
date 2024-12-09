@@ -105,3 +105,67 @@ The form has several crucial fields to complete:
     ![Visualisation](/images/monitoring/global-monitoring-vizualization.png)
     </Accordion> 
 </AccordionGroup>
+### Custom Functions
+
+When installing Monita script, you can declare custom functions calculate some fields in the _Monita_ payload. The fields that can be overridden include:
+* Session ID `sid` [`get_session_id`]
+* Customer ID `cid` [`get_customer_id`]
+* Consent `cn` [`get_consent`]
+* event `e` [`get_event`] (takes vendor name and payload as parameters)
+
+You can add the functions in this object: ![Mapped event examples](/images/monitoring/global-monitoring-installation-script-custom-script-highlighted.png)
+
+You can also prevent Monita from executing using a function [`is_monita_allowed`] that takes _Monita_ payload as argument and returns `true` (allowed) or `false` (not allowed).
+
+If you have specific environment fields, related to a TMS (Tag Management System) not supported by Monita, or other ebvironment fields you want to override, you can sepcify a function [`get_tms_data`] that takes `window`as parameter and return an object of environment fields.
+The fields you can override are:
+* System `s` (e.g. `tealium`)
+* System release version `rl` (.e.g `v1.1.5`)
+* Environment name `env` (e.g. `prod`)
+* Domain / Container ID ...etc `do` (e.g. `GTM-123456`)
+* Execution time `et` in milliseconds (e.g. `1733731798766`),
+* Tag ID, where you can tell which "tag" is associated with this vendor event fire (e.g. `110`)
+
+#### Examples
+```javascript
+// custom object example
+{
+  get_session_id: function(){
+    return sessionStorage.getItem("sid");
+  },
+  get_customer_id: function() {
+    return getCookie("cust_id"); // custom function can be found here https://stackoverflow.com/a/15724300
+  },
+  get_consent() {
+    return getCookie("allow_instruments"); // custom function can be found here https://stackoverflow.com/a/15724300
+  },
+  get_event(vendorName, data) {
+    if(vendorName == "Google Analytics 4") {
+      return data.en;
+    } else if (vendorName == "Custom") {
+      if(data.commerce) {
+        if(data.commerce.purcahse) {
+          return "purchase"
+        } else if (data.commerce.checkout) {
+          return "checkout"
+        } else {
+          return "cart"
+        }
+      } else {
+        return "pageview"
+      }
+    } else {
+      return null; // will default to whatever default event field or user-specified event field is set for this vendor
+    }
+  }, is_monita_allowed = function(monitaPayload) {
+    return monitaPayload.p == "/checkout"; // `p` = path name
+  },
+  get_tms_data = function(windowArg) {
+    return {
+      s: "custom",
+      rl: windowArg.customEnv.v,
+      env: windowArg.customEnv.name
+    };
+  }
+}
+```
