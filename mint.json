@@ -20,36 +20,47 @@
         "url": "mailto:support@getmonita.io"
     }],
     "topbarCtaButton": {
-        "name": "APP",
+        "name": "Login",
         "url": "https://app.getmonita.io"
     },
+    "tabs": [
+    {
+        "name": "Documentation",
+        "url": "documentation"
+    },
+    {
+        "name": "API Reference",
+        "url": "api-reference",
+        "openapi": "/api-reference/openapi.json"
+    }
+],
     "navigation": [{
             "group": "Setting-up Monitoring",
             "pages": [
-                "monitoring/setup-global-monitoring",
-                "monitoring/monita-collect",
-                "monitoring/setup-tag-monitoring",
-                "monitoring/update-tag-monitoring",
-                "monitoring/deployment-troubleshooting"
+                "documentation/monitoring/setup-global-monitoring",
+                "documentation/monitoring/monita-collect",
+                "documentation/monitoring/setup-tag-monitoring",
+                "documentation/monitoring/update-tag-monitoring",
+                "documentation/monitoring/deployment-troubleshooting"
             ]
         },
         {
             "group": "3rd Party Integrations",
             "pages": [
-                "integration/gtm-integration",
-                "integration/slack-integration",
-                "integration/disconnect-integration"
+                "documentation/integration/gtm-integration",
+                "documentation/integration/slack-integration",
+                "documentation/integration/disconnect-integration"
             ]
         },
         {
             "group": "Alerting",
             "pages": [
-                "alerting/alert-types",
-                "alerting/volume-anomalies-alert",
-                "alerting/data-validation-alert-realtime",
-                "alerting/enable-alert",
-                "alerting/disable-alert",
-                "alerting/delete-alert"
+                "documentation/alerting/alert-types",
+                "documentation/alerting/volume-anomalies-alert",
+                "documentation/alerting/data-validation-alert-realtime",
+                "documentation/alerting/enable-alert",
+                "documentation/alerting/disable-alert",
+                "documentation/alerting/delete-alert"
             ]
         }
     ],
