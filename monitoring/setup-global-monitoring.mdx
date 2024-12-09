@@ -136,10 +136,10 @@ The fields you can override are:
   get_customer_id: function() {
     return getCookie("cust_id"); // custom function can be found here https://stackoverflow.com/a/15724300
   },
-  get_consent() {
+  get_consent: function() {
     return getCookie("allow_instruments"); // custom function can be found here https://stackoverflow.com/a/15724300
   },
-  get_event(vendorName, data) {
+  get_event: function(vendorName, data) {
     if(vendorName == "Google Analytics 4") {
       return data.en;
     } else if (vendorName == "Custom") {
@@ -157,7 +157,7 @@ The fields you can override are:
     } else {
       return null; // will default to whatever default event field or user-specified event field is set for this vendor
     }
-  }, is_monita_allowed = function(monitaPayload) {
+  }, is_monita_allowed: function(monitaPayload) {
     return monitaPayload.p == "/checkout"; // `p` = path name
   },
   get_tms_data: function(windowArg) {
