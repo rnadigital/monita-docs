@@ -1,0 +1,106 @@
+---
+title: 'Set Up Global Monitoring - iOS Swift SDK'
+description: 'This is a step by step guide to setup and manage Monita Global Monitoring Setup/Manage Global Monitoring for iOS Swift'
+icon: 'swift'
+---
+
+Global Monitoring is an Enterprise feature, which enables companies to agnostically monitor network requests departing your client. 
+
+### Instructions
+
+1. Click 'New Domain' and your domain and select the Monitoring Tab
+![](/images/monitoring/global-monitoring-add-new-domain.png)
+2. Select Android SDK or Global Monitoring (Use Global if you would like to use the same Domain for both web and mobile)
+3. Next provide the Domain you wish to ingest events from and press enter (you can add subdomains here)
+![Add domain](/images/monitoring/global-monitoring-enter-domain.png)
+4. Start adding Vendors by Clicking new Vendor
+![Vendor List](/images/monitoring/global-monitoring-vendor-list-screen.png)
+5. Search for an existing Vendor or create a Custom Vendor
+<Frame caption="Create a custom vendor">![Add custom vendor](/images/monitoring/global-monitoring-add-custom-vendor.png)</Frame>
+<Frame caption="Search for existing providers">![Add existing vendor](/images/monitoring/global-monitoring-add-existing-vendor.png)</Frame>
+6. Fill in the Monitoring Form for the specific Vendor you have Chosen
+![Vendor configuration screen](/images/monitoring/global-monitoring-vendor-config.png)
+The form has several crucial fields to complete:
+<AccordionGroup>
+    <Accordion title="Domains">
+    This is the domain which client side pixel/tag requests are sent to.
+    Typically known as the request URL e.g. for Facebook, "facebook.com/tr".
+    </Accordion>    
+    <Accordion title="Execluded Parameters">
+    Use this field to specify which keys you would like to exclude from monitoring. e.g. Facebook sends an "sw" parameter with screen width. If you don't want/need to monitor that key, enter it here.
+    </Accordion>    
+    <Accordion title="Event Mapping Field">
+    Used to specify which key in the vendors payload corresponds to the event name.
+    You can specify either a single field by name, or multiple fields inside curly braces e.g. `{{fieldA}}-{{fieldB}}`. Here is an example request with the event in the "ev" parameter:
+    ![Mapped event examples](/images/monitoring/global-monitoring-custom-event-field.png)
+    You can also extract a field value via regular-expression.
+    
+    E.g. You may want to extract a sub-domain from a URL and add it to the event, this can be done by find inf the correct regex and applying it to the field parameter in the following format:
+    
+    `regex::(?<=https:\/\/)[\w|-]*::url`
+    
+    This format represents 3 sections, separated by double-colons (`::`). The 3 sections are:
+    * `regex` which inpforms the expression parser that the user is passing a regex expression
+    * `(?<=https:\/\/)[\w|-]*` is the regular expression  itself (javascript regex supported. Test your regex in any regex editor such are [Regexr](https://regexr.com/))
+    * `url` is the field from which the content is extracted. You may use a dot (`.`) separated field path. (`url`, `host`, `method` and `vendorName` are automatically added to the payload)
+
+    The following execnt field `eve-{{regex::(?<=https:\/\/)[\w|-]*::url}}` (multiple digits) on value of field "myfield". In a payload `{ url: "https://subdomain.myapp.com" }`, the event field will be `eve-subdomain`.
+
+    <Tip>Regular Expression allows for capturing text in relation to the existence of other text before it or after it. This is called [lookahead](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Lookahead_assertion) and [lookbehind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Lookbehind_assertion)</Tip>
+    </Accordion>    
+    <Accordion title="Filters">
+    Use this to focus your monitoring to specific vendor requests e.g. only where "ev" = "orderSuccess". This can also help reduce API call consumption.
+    </Accordion>    
+</AccordionGroup>
+7. After completing your Vendor Form press the Apply and then the Save button. To Manage simply enter this form again, edit and you will notice the Deployment Version at the bottom increment by 1.
+![Vendor added to list](/images/monitoring/global-monitoring-added-vendor.png)
+8. See the below iOS Swift installation guide to install the iOS SDK on your Swift App.
+
+## Installation
+
+Follow these steps to integrate Monita SDK into your iOS project:
+
+### Step 1: Add the Package Dependency
+
+1. Open Xcode and navigate to **File > Swift Packages > Add Package Dependency**.
+2. In the search box, enter the URL:  
+   ```
+   https://github.com/rnadigital/monita-ios-sdk.git
+   ```
+3. Click **Next**.
+4. Select the **branch** option and enter `master` as the branch name.
+5. Click **Finish**. The SDK will be added under **Swift Package Dependencies**.
+
+### Step 2: Configure the SDK Token
+
+1. Open your project's `Info.plist` file in Xcode.
+2. Add a new key called `MonitaSDKToken` with your SDK token as the value:
+
+   ```xml
+   <key>MonitaSDKToken</key>
+   <string>Your-Token-Here</string>
+   ```
+
+## Usage
+
+After installing the SDK, initialize it in your application delegate. For example, update your `AppDelegate.swift` as follows:
+
+```swift
+import MonitaSDK
+
+func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    // Initialize Monita SDK with your custom configuration
+    MonitaSDK.configure(
+        enableLogger: true,
+        batchSize: 10,
+        customerId: "123456",
+        consentString: "Granted",
+        sessionId: "123456",
+        appVersion: "1.0"
+    )
+    
+    return true
+}
+```
+
+

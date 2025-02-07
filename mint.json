@@ -38,6 +38,8 @@
             "group": "Setting-up Monitoring",
             "pages": [
                 "documentation/monitoring/setup-global-monitoring",
+                "documentation/monitoring/setup-global-monitoring-android-kotlin",
+                "documentation/monitoring/setup-global-monitoring-ios-swift",
                 "documentation/monitoring/monita-collect",
                 "documentation/monitoring/setup-tag-monitoring",
                 "documentation/monitoring/update-tag-monitoring",
