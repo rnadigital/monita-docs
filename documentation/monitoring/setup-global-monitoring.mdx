@@ -45,8 +45,8 @@ The form has several crucial fields to complete:
     This is the domain which client side pixel/tag requests are sent to.
     Typically known as the request URL e.g. for Facebook, "facebook.com/tr".
     </Accordion>    
-    <Accordion title="Execluded Parameters">
-    Use this field to specify which keys you would like to exclude from monitoring. e.g. Facebook sends an "sw" parameter with screen width. If you don't want/need to monitor that key, enter it here.
+    <Accordion title="Excluded Parameters">
+    Use this field to specify which keys you would like to exclude from monitoring. e.g. Facebook sends an "sw" parameter with screen width. If you don't want/need to monitor that key, enter it here. This field also accepts regex. Regex should be encapsulated within forward slashes `/`. As an example if you entered `/^(data\.loader|data\.timing)\./` this would ensure that anything starting with `data.loader.` and `data.timing.` would not be monitored.
     </Accordion>    
     <Accordion title="Event Mapping Field">
     Used to specify which key in the vendors payload corresponds to the event name.
@@ -63,7 +63,7 @@ The form has several crucial fields to complete:
     * `(?<=https:\/\/)[\w|-]*` is the regular expression  itself (javascript regex supported. Test your regex in any regex editor such are [Regexr](https://regexr.com/))
     * `url` is the field from which the content is extracted. You may use a dot (`.`) separated field path. (`url`, `host`, `method` and `vendorName` are automatically added to the payload)
 
-    The following execnt field `eve-{{regex::(?<=https:\/\/)[\w|-]*::url}}` (multiple digits) on value of field "myfield". In a payload `{ url: "https://subdomain.myapp.com" }`, the event field will be `eve-subdomain`.
+    The following event field `eve-{{regex::(?<=https:\/\/)[\w|-]*::url}}` (multiple digits) on value of field "myfield". In a payload `{ url: "https://subdomain.myapp.com" }`, the event field will be `eve-subdomain`.
 
     <Tip>Regular Expression allows for capturing text in relation to the existence of other text before it or after it. This is called [lookahead](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Lookahead_assertion) and [lookbehind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Lookbehind_assertion)</Tip>
     </Accordion>    
