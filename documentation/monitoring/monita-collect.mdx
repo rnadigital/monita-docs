@@ -17,5 +17,22 @@ You many want to want to send a custom event to Monita based on a user action or
 6. Paste and modify the code in your website Javascript code
 <Tip>If you want to keep track of certain variables, call monita collect `monitaSendBeacon(...)` at the same spot inthe code the variables are set before being processed.</Tip>
 ![Enable Monita Collect](/images/monitoring/global-monitoring-monita-collect-code-example.png)
+If you want to send any arbitrary event and data to Monita, you can use 'Monita' as the Vendor (or even add your own custom Vendor in the UI.)
+See a sample code snippet below:
+
+<Info>The monitaSendBeacon function will work so long as the Monita Global JS SDK has been initialised on the page. If not, it should be loaded. To check if it has been loaded you can try and access `__monita_settings`, if it is available then Monita has been loaded. If not you can manually add our initialisation script with your token [as per this guide.](http://docs.getmonita.io/documentation/monitoring/setup-global-monitoring#checking-that-monita-script-is-being-loaded-on-the-client-side-your-domain) </Info>
+```javascript
+<script>
+  // This simple example assumes the Monita SDK is already loaded on the page.
+  monitaSendBeacon("Monita", "customEvent", {
+    // Add any additional data such as data layer keys you want to send below:
+    // url: window.location.href,
+    // path: window.location.pathname,
+    // userId: 'user123',
+    // pageCategory: 'landing'
+  });
+</script>
+```
+
 7. Test execution
 ![Check Monita Collect traffic](/images/monitoring/global-monitoring-monita-collect-call-check.png)
