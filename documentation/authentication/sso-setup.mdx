@@ -18,7 +18,7 @@ Monita supports SSO authentication through OAuth providers, primarily Microsoft 
 - Access to your organization's OAuth provider (Azure AD, etc.)
 
 ## Setup Steps
-
+<Note>Steps 1-3 are done in Monita and may be done on your behalf by your account manager</Note>
 ### 1. Create a Monita Account
 
 - Sign up for a Monita account at [https://app.getmonita.io](https://app.getmonita.io)
@@ -39,63 +39,71 @@ Monita supports SSO authentication through OAuth providers, primarily Microsoft 
 - Contact support if you need to upgrade your plan to include SSO
 
 ### 4. Create OAuth Application in Your Provider
+<Note>Steps 4 is done in your SSO providers interface. You must create the OAuth application first, as the configuration details will be needed for the Monita SSO setup.</Note>
+<AccordionGroup>
+  <Accordion title="Microsoft Entra ID" icon="microsoft">
+    #### For Microsoft Azure AD:
+    
+    1. Go to [Azure Portal](https://portal.azure.com)
+    2. Navigate to **Azure Active Directory** > **App registrations**
+    3. Click **New registration**
+    4. Configure the application:
+       - **Name**: Monita SSO
+       - **Supported account types**: Accounts in this organizational directory only
+       - **Redirect URI**:
+         - Type: **Web**
+         - URI: `https://api.app.getmonita.io/api/v1/oauth2callback/sso`
+       - Click **Register**
+    5. After creation, note down:
+       - **Application (client) ID**
+       - **Directory (tenant) ID**
+    6. Create a client secret:
+       - Go to **Certificates & secrets**
+       - Click **New client secret**
+       - Add a description (e.g., "Monita SSO Secret")
+       - Select expiration period (recommend 12-24 months)
+       - Click **Add**
+       - **Important**: Copy the secret value immediately - you won't be able to see it again
+       - Store this securely - you'll need it for Monita configuration
+    7. Configure API permissions:
+       - Go to **API permissions**
+       - Click **Add a permission**
+       - Select **Microsoft Graph**
+       - Choose **Delegated permissions**
+       - Add the following permissions:
+         - `email` (View users' email address)
+         - `profile` (View users' basic profile)
+         - `User.Read` (Sign in and read user profile)
+       - Click **Add permissions**
+       - Click **Grant admin consent** (if you have admin privileges)
+    8. Configure Authentication:
+       - Go to **Authentication**
+       - Under "Select the tokens you would like to be issued by the authorization endpoint":
+         - ✅ **Access tokens**
+         - ✅ **ID tokens**
+    9. Configure Token Configuration:
+       - Go to **Token configuration**
+       - Click **Add optional claim**
+       - Add the following claims:
+         - `upn` (User Principal Name)
+         - `given_name` (First Name)
+    10. Verify Configuration:
+        - Ensure your app registration shows:
+          - Status: Active
+          - Supported account types: Single tenant
+          - Redirect URI: `https://api.app.getmonita.io/api/v1/oauth2callback/sso`
+          - Required permissions: email, profile, User.Read
+          - Optional claims: upn, given_name
+  </Accordion>
+  <Accordion title="Google Workspace" icon="google">
+       Go to our sign in page and press Sign In with Google.
+       https://app.getmonita.io/login
+  </Accordion>
+</AccordionGroup>
 
-**Important:** You must create the OAuth application first, as the configuration details will be needed for the Monita SSO setup.
-
-#### For Microsoft Azure AD:
-
-1. Go to [Azure Portal](https://portal.azure.com)
-2. Navigate to **Azure Active Directory** > **App registrations**
-3. Click **New registration**
-4. Configure the application:
-   - **Name**: Monita SSO
-   - **Supported account types**: Accounts in this organizational directory only
-   - **Redirect URI**:
-     - Type: **Web**
-     - URI: `https://api.app.getmonita.io/api/v1/oauth2callback/sso`
-   - Click **Register**
-5. After creation, note down:
-   - **Application (client) ID**
-   - **Directory (tenant) ID**
-6. Create a client secret:
-   - Go to **Certificates & secrets**
-   - Click **New client secret**
-   - Add a description (e.g., "Monita SSO Secret")
-   - Select expiration period (recommend 12-24 months)
-   - Click **Add**
-   - **Important**: Copy the secret value immediately - you won't be able to see it again
-   - Store this securely - you'll need it for Monita configuration
-7. Configure API permissions:
-   - Go to **API permissions**
-   - Click **Add a permission**
-   - Select **Microsoft Graph**
-   - Choose **Delegated permissions**
-   - Add the following permissions:
-     - `email` (View users' email address)
-     - `profile` (View users' basic profile)
-     - `User.Read` (Sign in and read user profile)
-   - Click **Add permissions**
-   - Click **Grant admin consent** (if you have admin privileges)
-8. Configure Authentication:
-   - Go to **Authentication**
-   - Under "Select the tokens you would like to be issued by the authorization endpoint":
-     - ✅ **Access tokens**
-     - ✅ **ID tokens**
-9. Configure Token Configuration:
-   - Go to **Token configuration**
-   - Click **Add optional claim**
-   - Add the following claims:
-     - `upn` (User Principal Name)
-     - `given_name` (First Name)
-10. Verify Configuration:
-    - Ensure your app registration shows:
-      - Status: Active
-      - Supported account types: Single tenant
-      - Redirect URI: `https://api.app.getmonita.io/api/v1/oauth2callback/sso`
-      - Required permissions: email, profile, User.Read
-      - Optional claims: upn, given_name
 
 ### 5. Configure SSO in Team Settings
+<Note>Steps 5-7 are done in Monita and may be done on your behalf by your account manager</Note>
 
 1. Navigate to **Team Management** (accessible from the main menu)
 2. Scroll down to find the **OAuth Domain SSO Config** section
@@ -122,7 +130,7 @@ For custom providers, additional fields may be required:
 
 ### 7. Request Domain Configuration from Platform Admin
 
-**Important:** After creating your OAuth configuration, you must contact the Monita platform admin to add your organization's email domains to the SSO configuration.
+<Warning> After creating your OAuth configuration, you must contact the Monita platform admin to add your organization's email domains to the SSO configuration.</Warning>
 
 Provide the platform admin with:
 
@@ -149,7 +157,6 @@ The platform admin will:
 When users from your organization log in via SSO for the first time:
 
 - They are automatically added as delegates under your account
-- A user onboarding record is created with `skipOnboarding: true`
 - They get access to the monitoring features under your organization
 
 ## Troubleshooting
