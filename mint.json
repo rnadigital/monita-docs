@@ -47,6 +47,12 @@
             ]
         },
         {
+            "group": "Authentication",
+            "pages": [
+                "documentation/authentication/sso-setup"
+            ]
+        },
+        {
             "group": "3rd Party Integrations",
             "pages": [
                 "documentation/integration/gtm-integration",
