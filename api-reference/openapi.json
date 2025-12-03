@@ -87,6 +87,88 @@
           }
         }
       }
+    },
+    "/stream/api/v1": {
+      "post": {
+        "summary": "Ingest Streaming Event",
+        "description": "Send vendor events from a whitelisted domain to the Monita streaming ingestion service. This endpoint expects the exact payload that the Monita tag emits (see example) and requires a valid token (`t`), vendor name (`vn`) and event (`e`).",
+        "operationId": "stream_event_stream_api_v1_post",
+        "servers": [
+          {
+            "url": "https://stream.raptor.digital",
+            "description": "Streaming ingestion server"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StreamEventRequest"
+              },
+              "examples": {
+                "pageView": {
+                  "value": {
+                    "t": "11111111-2222-3333-4444-555555555555",
+                    "dm": "script",
+                    "mv": "1.24g",
+                    "sv": "40",
+                    "tm": 1764757982.262,
+                    "e": "PAGE_VIEW",
+                    "vn": "Snapchat",
+                    "m": "GET",
+                    "vu": "https://tr.snapchat.com/p?...",
+                    "u": "https://demo-moncart.pages.dev/success?card=1&cvv=1&expM=1&expY=1",
+                    "p": "/success",
+                    "dt": [
+                      {
+                        "pid": "37f201ac-67d8-4b77-91e6-383d8ff78fd6",
+                        "ev": "PAGE_VIEW",
+                        "intg": "gtm",
+                        "ts": "1764757981906",
+                        "vendorName": "Snapchat",
+                        "__mon_method": "GET",
+                        "__mon_host": "tr.snapchat.com"
+                      }
+                    ],
+                    "np": [],
+                    "s": "google_tag_manager",
+                    "rl": "34",
+                    "env": "",
+                    "do": "GTM-M7L6DD5",
+                    "et": 0,
+                    "vid": null,
+                    "cn": null,
+                    "sid": "8c75639c-719c-4fe8-9845-fc98512dcd67",
+                    "cid": null
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Event accepted and normalized. The resulting record is persisted with fields such as `event_id`, `event_timestamp`, `vendor`, `vendor_name`, `domain`, `session_id`, `deployment_method`, browser metadata, and more (see data warehouse schema)."
+          },
+          "400": {
+            "description": "Malformed request body or missing required fields.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid or expired token."
+          },
+          "403": {
+            "description": "Request origin is not whitelisted for streaming."
+          }
+        }
+      }
     }
   },
   "components": {
@@ -602,6 +684,167 @@
           "value"
         ],
         "title": "ValidationRule"
+      },
+      "StreamEventRequest": {
+        "type": "object",
+        "description": "Raw payload accepted by the streaming ingestion endpoint. The Monita browser tag sends this body verbatim.",
+        "required": [
+          "t",
+          "vn",
+          "e"
+        ],
+        "properties": {
+          "t": {
+            "type": "string",
+            "title": "Token",
+            "description": "Issued ingestion token used to authorize the event.",
+            "format": "uuid"
+          },
+          "dm": {
+            "type": "string",
+            "title": "Deployment Method",
+            "description": "Source of the payload (for example `script`)."
+          },
+          "mv": {
+            "type": "string",
+            "title": "Monita Version",
+            "description": "Version of the Monita script that produced the event."
+          },
+          "sv": {
+            "type": "string",
+            "title": "Script Version",
+            "description": "Version of the customer deployment."
+          },
+          "tm": {
+            "type": "number",
+            "title": "Client Timestamp",
+            "description": "Epoch timestamp with millisecond precision provided by the browser."
+          },
+          "e": {
+            "type": "string",
+            "title": "Event",
+            "description": "Event/action name such as `PAGE_VIEW`."
+          },
+          "vn": {
+            "type": "string",
+            "title": "Vendor Name",
+            "description": "Human readable vendor identifier."
+          },
+          "m": {
+            "type": "string",
+            "title": "Vendor HTTP Method",
+            "description": "HTTP method used when contacting the vendor endpoint."
+          },
+          "vu": {
+            "type": "string",
+            "title": "Vendor URL",
+            "description": "Full URL of the vendor endpoint that fired.",
+            "format": "uri"
+          },
+          "u": {
+            "type": "string",
+            "title": "Page URL",
+            "description": "URL of the monitored page.",
+            "format": "uri"
+          },
+          "p": {
+            "type": "string",
+            "title": "URL Path",
+            "description": "Path portion of the monitored page."
+          },
+          "dt": {
+            "type": "array",
+            "title": "Event Details",
+            "description": "Flexible event data emitted by the vendor. Each object may contain arbitrary keys that describe the vendor payload.",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "np": {
+            "type": "array",
+            "title": "Non Persisted Data",
+            "description": "Optional list of transient diagnostic values.",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "s": {
+            "type": "string",
+            "title": "System",
+            "description": "System or tag template that triggered the event."
+          },
+          "rl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Release",
+            "description": "Internal release identifier."
+          },
+          "env": {
+            "type": "string",
+            "title": "Environment",
+            "description": "Deployment environment string."
+          },
+          "do": {
+            "type": "string",
+            "title": "Container Id",
+            "description": "Identifier for the monitored container (for example `GTM-M7L6DD5`)."
+          },
+          "et": {
+            "type": "integer",
+            "title": "Execution Time",
+            "description": "Execution duration in milliseconds."
+          },
+          "vid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vendor Identifier",
+            "description": "Optional vendor specific identifier."
+          },
+          "cn": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Consent",
+            "description": "Consent state encoded by the customer."
+          },
+          "sid": {
+            "type": "string",
+            "title": "Session Id",
+            "description": "Client session id (UUID)."
+          },
+          "cid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Customer Id",
+            "description": "Optional customer identifier."
+          }
+        },
+        "additionalProperties": true
       }
     }
   }
