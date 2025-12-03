@@ -1,0 +1,48 @@
+---
+title: 'Set Up Global Monitoring - Server Side'
+description: 'This is a step by step guide to setup and manage Monita Global Monitoring Setup/Manage Global Monitoring for Server Side Accounts'
+icon: 'server'
+---
+
+Global Monitoring is an Enterprise feature, which enables companies to agnostically monitor/stream network requests departing your client or server. 
+
+## Installation in Monita
+### Domain Setup
+1. Click 'New Domain' and your domain and select the Monitoring Tab
+2. Select Global Monitoring (Use Global if you would like to use the same Domain for both web/mobile/server)
+3. Next provide the Domain you wish to ingest events from and press enter. 
+<Tip>For Server side be sure to determine the URL that requests will originate from. Users who wish to stream events from multiple clients (Web/Mobile/Server) should make sure they whitelist each domain/origination server URL here. The first domain entered will become it's 'Domain' name inside Monita.</Tip>
+
+![Add domain](/images/monitoring/global-monitoring-enter-domain.png)
+### Vendor Setup
+4. Start adding Vendors by Clicking new Vendor
+![Vendor List](/images/monitoring/global-monitoring-vendor-list-screen.png)
+5. Search for an existing Vendor or create a Custom Vendor
+<Frame caption="Create a custom vendor">![Add custom vendor](/images/monitoring/global-monitoring-add-custom-vendor.png)</Frame>
+<Frame caption="Search for existing providers">![Add existing vendor](/images/monitoring/global-monitoring-add-existing-vendor.png)</Frame>
+
+6. Fill in the Monitoring Form for the specific Vendor you have Chosen
+![Vendor configuration screen](/images/monitoring/global-monitoring-vendor-config.png)
+The fields in this form only matter if the user is deploying to a client side platform (web/mobile). For server side you can simply add a vendor and press save.:
+### Monita Collect switch
+7. Turn on the 'Monita Collect' switch
+<Note>Monita Collect will enable a code button on the left of every vendor, when clicked shows you the names of Vendors, which you can then map in your API Call in the `vn` parameter. The `vn` parameter can take in any arbitray value, but it is recommended to use the exact spelling provided by Monita if you would like to see the logo appear in the platform visualisation dashboard. ![Monita Collect Vendor Name](/images/monitoring/global-monitoring-monita-collect-vendor-name.png)</Note>
+### Getting your token
+8. Press the Save button, this will provide your token. 
+<Tip>If you already have an existing Domain, press Manage > Installation Guide and copy your token.</Tip>
+![Vendor added to list](/images/monitoring/global-monitoring-added-vendor.png)
+9. Now that you have a token, you can use it to send events to Monita from your server.
+
+## Installation in your server side platform
+
+Enter your server side platform (Adobe, Tealium, Segment etc)
+
+### Select a generic HTTP/Webhook outbound event/action
+
+1. Use the spec found on [API Reference](/api-reference/ingest-streaming-event) to craft a `POST` request to send events to Monita.
+<Info>This is where you should map an event name in the `e` parameter, any data inside the `dt` object and the Vendor Name (from step 7) in the `vn` parameter.</Info>
+2. Use the token provided to you to send arbitrary events to Monita.
+
+3. Confirm in your platform's logging that you are recieving `204` responses from Monita.
+
+4. Confirm in Monita that you are recieving events in the Visualisation Tab.
