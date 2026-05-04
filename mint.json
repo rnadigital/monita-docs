@@ -71,6 +71,12 @@
                 "documentation/alerting/disable-alert",
                 "documentation/alerting/delete-alert"
             ]
+        },
+        {
+            "group": "Compliance",
+            "pages": [
+                "documentation/compliance/pii-viewer"
+            ]
         }
     ],
     "footerSocials": {

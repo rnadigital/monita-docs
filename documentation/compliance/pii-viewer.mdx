@@ -1,0 +1,112 @@
+---
+title: 'PII Viewer'
+description: 'See where personally identifiable information (PII) is leaking from your site into your marketing and analytics vendors, and set up custom alerts to be notified when it happens.'
+icon: 'shield-keyhole'
+---
+
+The **PII Viewer** gives you a single, near‑realtime view of any Personally Identifiable Information (PII) that Monita has detected leaving your site or app and being sent to your marketing, analytics, and ad‑tech vendors.
+
+It's designed to help compliance, privacy, and analytics teams answer two questions at a glance:
+
+1. *Are we leaking PII to any of our vendors?*
+2. *Which vendors, events, and fields are involved?*
+
+<Frame caption="The PII Viewer surfaces detected PII data points by domain, vendor, event and field">![PII Viewer](/images/monitoring/global-monitoring-pii-viewer.png)</Frame>
+
+## How Monita handles detected PII
+
+Monita is built privacy‑first. We never store the raw PII values that we observe in your traffic.
+
+When PII is detected in a request leaving your site:
+
+1. The original value is **immediately replaced with a SHA‑256 hash** before the record is written to our database.
+2. A `pii_type` label (e.g. `email`) is attached to the record so it can be surfaced in the PII Viewer.
+3. The hashed record is retained so you can still see the **vendor**, **event**, **field name**, and **volume** of leaks without ever exposing the underlying PII.
+
+<Note>Because values are one‑way hashed in flight, even Monita support cannot retrieve the raw PII that was detected. The hash is, however, stable — meaning the same email address will always produce the same hash, which is enough to let you de‑duplicate or count unique users.</Note>
+
+<Warning>Monita does **not** automatically notify you when PII is detected. Detection is always visible in the PII Viewer, but if you want to be alerted in Slack or email when PII appears, you need to set up a [custom PII alert](#setting-up-custom-pii-alerts) — see below.</Warning>
+
+## What you see in the PII Viewer
+
+The viewer is split into two sections.
+
+#### Summary card
+A high‑level count of distinct PII data points detected in the selected time window, broken down by **domain**, **PII type**, and the **vendors** involved.
+
+#### Detailed Data Breakdown
+A row‑level table showing every detected leak, including:
+
+| Column | What it means |
+|-|-|
+| **Domain** | The domain the request originated from. |
+| **Vendor** | The vendor the data was being sent to (e.g. Google Analytics 4, Meta Pixel, Floodlight). |
+| **Type** | The type of PII detected (e.g. `Email`, `Credit Card`, `SSN`, `Phone`). |
+| **Event** | The event the PII was attached to (e.g. `purchase`, `lead`, `pageview`). |
+| **Variable name** | The field/key in the vendor's payload that contained the PII (e.g. `ep.email`, `u1`). |
+| **Value Hash** | The SHA‑256 hash of the leaked value. The raw value is never stored. |
+| **Volume** | How many times that exact (hashed) value was seen in the selected window. |
+
+You can filter by **domain** and **vendor**, and adjust the **time window** (1 hour through to 3 months) using the controls at the top of the page.
+
+## What types of PII does Monita detect?
+
+Monita continuously scans every request streamed through Global Monitoring and looks for the following PII types:
+
+| PII type | Notes |
+|-|-|
+| **Email address** | Detected by format — works regardless of the field name. |
+| **Credit card number** | Visa, Mastercard, Amex and Discover. Validated with the Luhn checksum algorithm to virtually eliminate false positives from random digit sequences. |
+| **US Social Security Number (SSN)** | Excludes known‑invalid number ranges. Requires a relevant field name (e.g. `ssn`, `social`, `tax`, `tin`) to confirm intent. |
+| **US mobile number** | Supports the optional `+1` country code. Requires a relevant field name (e.g. `phone`, `mobile`, `cell`, `tel`, `contact`, `sms`) to confirm intent. |
+| **Australian mobile number** | Supports the `04xx` format and the optional `+61` country code. Requires a relevant field name as above. |
+
+<Tip>For ambiguous PII types like phone numbers and SSNs, Monita combines pattern matching with the **field/variable name** to avoid false positives — e.g. a 10‑digit order ID won't be flagged as a phone number unless the field is named something like `phone` or `mobile`.</Tip>
+
+### Out of scope (today)
+
+To keep detection accuracy high, the following are **not** currently detected automatically:
+
+- Names, postal addresses, dates of birth
+- Passport / driver's licence numbers
+- Phone numbers from countries other than the US and Australia
+- PII buried inside long blocks of unstructured free text
+
+If any of the above are critical for your compliance posture, please reach out to your account manager or [contact support](mailto:support@getmonita.io) — we are continuously expanding coverage.
+
+## Setting up custom PII alerts
+
+While Monita surfaces all detected PII inside the PII Viewer, **alerts are opt‑in**. This is intentional — different organisations have very different policies about which vendors are allowed to receive which fields, so you remain in control of when and how you're notified.
+
+To get a Slack or email notification any time PII is detected against a particular vendor, create a **Data Validation alert** with a `Contains email` (or equivalent) operator on the relevant parameter.
+
+<Frame caption="Example: a Compliance Alert that fires whenever an email is detected being sent to Meta Pixel">![Set up a custom PII alert via Data Validation](/images/monitoring/global-monitoring-pii-alert.png)</Frame>
+
+To create one:
+
+1. Hover on your domain card and click **Alerts**, then **New Alert**.
+2. Set **Alert Type** to **Data Validation** and pick the **Vendor(s)** you want to monitor (e.g. Meta Pixel, Google Ads).
+3. Under **Trigger Conditions**, set the **Parameter** you want to inspect and choose an operator like `Contains email`, `Contains credit card`, etc.
+4. Optionally add **Filters** (e.g. only on the `purchase` event) to scope the alert.
+5. Choose your **Execution period** and **destination** (Slack or email) and save.
+
+For full step‑by‑step instructions, see [Data Validation Alerts](/documentation/alerting/data-validation-alert-realtime).
+
+<Note>Data Validation alerts can run in **realtime** for Global Monitoring customers — meaning you'll be notified within seconds of a PII leak, rather than waiting for a scheduled evaluation window.</Note>
+
+## FAQ
+
+<AccordionGroup>
+    <Accordion title="Will Monita ever store the raw PII it detects?">
+    No. Detected PII values are SHA‑256 hashed in flight, before any data is written to our database. The raw value cannot be recovered, by you, by us, or by anyone else.
+    </Accordion>
+    <Accordion title="Why hash instead of dropping the value entirely?">
+    Hashing preserves the ability to **count unique users**, **de‑duplicate**, and **trend leakage volumes over time** in the PII Viewer, all without ever exposing the underlying value.
+    </Accordion>
+    <Accordion title="Why didn't Monita detect a particular PII value I can see in the raw payload?">
+    Monita's detection is conservative by design — we'd rather miss an edge case than flood the platform with false positives. Common reasons a value isn't flagged include: the value is a PII type we don't yet cover (e.g. a name or address), the field name doesn't include a recognised keyword for ambiguous types like phones/SSNs, or the value is embedded inside a larger free‑text blob. If you have a specific case you'd like reviewed, [contact support](mailto:support@getmonita.io).
+    </Accordion>
+    <Accordion title="Can I be alerted automatically when PII is detected?">
+    Yes — set up a [Data Validation alert](/documentation/alerting/data-validation-alert-realtime) using a `Contains email` (or similar) operator. This is opt‑in so you control exactly which vendors and parameters trigger a notification.
+    </Accordion>
+</AccordionGroup>
